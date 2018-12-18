@@ -14,7 +14,7 @@ pip install pytest-camel-collect
 # Usage
 
 This plug-in augments the pattern matching of [`python_classes`](https://docs.pytest.org/en/4.0.2/reference.html#confval-python_classes)
-in your _pytest.ini_, tox.ini, or setup.cfg file.
+in your _pytest.ini_, _tox.ini_, or _setup.cfg_ file.
 
 A `-` (dash) now represents a CamelCase word boundary.
 
