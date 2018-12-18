@@ -1,4 +1,5 @@
 # pytest-camel-collect
+[![PyPI version](https://badge.fury.io/py/pytest-camel-collect.svg)](https://badge.fury.io/py/pytest-camel-collect)
 
 Allow pytest to respect word boundaries of CamelCaseWords in class name patterns.
 
@@ -12,7 +13,7 @@ pip install pytest-camel-collect
 
 # Usage
 
-This plug-in augments the pattern matching of [`python_classes`](https://docs.pytest.org/en/4.0.2/example/pythoncollection.html#changing-naming-conventions) 
+This plug-in augments the pattern matching of [`python_classes`](https://docs.pytest.org/en/4.0.2/reference.html#confval-python_classes)
 in your _pytest.ini_, tox.ini, or setup.cfg file.
 
 A `-` (dash) now represents a CamelCase word boundary.
@@ -148,5 +149,5 @@ That's the spirit! Now, `TestStuff` will be collected, but not `Testimony`;
 To play around with the project and run its tests:
 
  1. Clone the repo
- 2. In a virtualenv (or whatever you wanna do, I don't control you), run `pip install -e .[dev]`
+ 2. In a virtualenv (or whatever you wanna do, I don't control you), run `pip install -e .[dev,test]`
  3. Run `py.test` to run the tests

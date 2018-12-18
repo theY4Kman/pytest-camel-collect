@@ -52,7 +52,7 @@ setup(
         'pytest>=2.9',
         'inflection>=0.3.1,<0.4',
     ],
-    extras={
+    extras_require={
         'test': [
             'pytest-lambda==0.0.2',
         ],

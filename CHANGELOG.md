@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+### Changed
+ - Added PyPI version badge to README
+ - Improved tests using [pytest-lambda](https://github.com/theY4Kman/pytest-lambda)
 
 
 ## [1.0.0] - 2018-12-17
