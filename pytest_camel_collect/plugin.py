@@ -10,13 +10,11 @@ in the pattern matches a CamelWords boundary.
 """
 import fnmatch
 import re
-from copy import copy
-from typing import TypeVar, Union, Dict
+from typing import Dict, Iterable, Type, TypeVar, Union
 
 import inflection
 import pytest
-from _pytest.compat import safe_isclass
-from _pytest.python import PyCollector, Module, Instance, Class, Package
+from _pytest import nodes, python
 from inflection import camelize
 
 
@@ -81,7 +79,7 @@ def preprocess_camel_words(s: str) -> str:
     return s
 
 
-class CamelWordsSensitiveCollector(PyCollector):
+class CamelWordsSensitiveCollector(python.PyCollector):
     def classnamefilter(self, name):
         preprocessed_name = preprocess_camel_words(name)
         patterns = self.config.getini('python_classes')
@@ -100,21 +98,34 @@ class CamelWordsSensitiveCollector(PyCollector):
         return False
 
     def _getcustomclass(self, name):
+        # NOTE: _getcustomclass was removed in pytest 5.3.0
         return CAMEL_COLLECTORS_BY_NAME.get(name) or super()._getcustomclass(name)
 
+    def collect(self) -> Iterable[Union[nodes.Item, nodes.Collector]]:
+        # Inject our camel collection into collected children. This is especially
+        # important for Class, which instantiates Instances directly since pytest 5.3.0
+        return [
+            inject_camel_collector(node)
+            for node in super().collect()
+        ]
 
-CamelPackage = type('CamelPackage', (CamelWordsSensitiveCollector, Package), {})
-CamelModule = type('CamelModule', (CamelWordsSensitiveCollector, Module), {})
-CamelClass = type('CamelClass', (CamelWordsSensitiveCollector, Class), {})
-CamelInstance = type('CamelInstance', (CamelWordsSensitiveCollector, Instance), {})
+
+_collector_classes = [
+    getattr(python, collector_name)
+    for collector_name in (
+        'Package',
+        'Module',
+        'Class',
+        'Instance',
+    )
+    if hasattr(python, collector_name)
+]
 
 
 # Map supported PyCollector classes to their wrapped CamelWords subclass
-CAMEL_COLLECTORS: Dict[PyCollector, CamelWordsSensitiveCollector] = {
-    Package: CamelPackage,
-    Module: CamelModule,
-    Class: CamelClass,
-    Instance: CamelInstance,
+CAMEL_COLLECTORS: Dict[Type[python.PyCollector], Type] = {
+    collector_cls: type(f'Camel{collector_cls.__name__}', (CamelWordsSensitiveCollector, collector_cls), {})
+    for collector_cls in _collector_classes
 }
 
 # Map names of supported PyCollector classes to their wrapped CamelWords subclass
@@ -125,7 +136,7 @@ CAMEL_COLLECTORS_BY_NAME: Dict[str, CamelWordsSensitiveCollector] = {
 }
 
 
-T = TypeVar('T', bound=PyCollector)
+T = TypeVar('T', bound=python.PyCollector)
 
 
 def inject_camel_collector(collector: T) -> Union[T, CamelWordsSensitiveCollector]:

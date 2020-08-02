@@ -6,7 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+### Fixed
+ - Resolve broken collection of nested classes
+
 ### Changed
+ - Support pytest versions 2.9, 3.6, 3.9, 4.0, 4.4, 4.5, 4.6, 5.0, 5.1, 5.2, 5.3, 5.4, and 6.0
  - Minor README updates
 
 

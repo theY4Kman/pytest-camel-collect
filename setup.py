@@ -55,6 +55,7 @@ setup(
     extras_require={
         'test': [
             'pytest-lambda==0.0.2',
+            'tox~=3.18',
         ],
         'dev': [
             'pytest-camel-collect[test]',
